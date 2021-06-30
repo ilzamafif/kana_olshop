@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category; //LOAD MODEL CATEGORY
 
+
 class CategoryController extends Controller
 {
     public function index()
@@ -16,15 +17,15 @@ class CategoryController extends Controller
         //JIKA LEBIH DARI 1 MAKA DAPAT DIPISAHKAN DENGAN KOMA, 
         // CONTOH: with(['parent', 'contoh1', 'contoh2'])
         $category = Category::with(['parent'])->orderBy('created_at', 'DESC')->paginate(10);
-      
+
         //QUERY INI MENGAMBIL SEMUA LIST CATEGORY DARI TABLE CATEGORIES, PERHATIKAN AKHIRANNYA ADALAH GET() TANPA ADA LIMIT
         //LALU getParent() DARI MANA? METHOD TERSEBUT ADALAH SEBUAH LOCAL SCOPE
         $parent = Category::getParent()->orderBy('name', 'ASC')->get();
-      
+
         //LOAD VIEW DARI FOLDER CATEGORIES, DAN DIDALAMNYA ADA FILE INDEX.BLADE.PHP
         //KEMUDIAN PASSING DATA DARI VARIABLE $category & $parent KE VIEW AGAR DAPAT DIGUNAKAN PADA VIEW TERKAIT
         return view('categories.index', compact('category', 'parent'));
     }
-  
+
     //METHOD LAINNYA DISINI JIKA ADA
 }
