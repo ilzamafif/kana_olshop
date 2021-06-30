@@ -8,8 +8,6 @@
 	<meta name="author" content="Daengweb">
   <meta name="keyword" content="aplikasi ecommerce laravel, tutorial laravel basic, belajar laravel, panduan belajar laravel">
     
-  	<!-- PERHATIKAN BAGIAN INI, APAPUN YANG DIAPIT OLEH @SECTION('TITLE') PADA VIEW YANG MENGGUNAKAN MASTER INI, MAKA AKAN ME-REPLACE CODE DIBAWAH -->
-  	<!-- TITLE MENJADI KATA KUNCI, JADI JIKA MENGGUNAKAN KEY TITLE PADA @YIELD, MAKA GUNAKAN KEY TITLE PADA @SECTION -->
     @yield('title')
 
   <!-- UNTUK ME-LOAD ASSET DARI PUBLIC, KITA GUNAKAN HELPER ASSET() -->
@@ -19,10 +17,6 @@
 	<link href="{{ asset('assets/vendors/pace-progress/css/pace.min.css') }}" rel="stylesheet">
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
-  
-    <!-- @INCLUDE SAMA DENGAN FUNGSI INCLUDE DI PHP, HANYA SAJA PENULISAN DIBLADE MENJADI @INCLUDE, BERARTI KITA ME-LOAD FILE LAINNYA -->
-  	<!-- KENAPA HEADER DIPISAHKAN? AGAR LEBIH RAPI SAJA JADI LEBIH MUDAH MAINTENANCENYA -->
-    <!-- KETIKA MELOAD FILE BLADE, MAKA EKSTENSI .BLADE.PHP TIDAK PERLU DITULISKAN -->
     @include('layouts.module.header')
   
     <div class="app-body" id="dw">
@@ -42,12 +36,12 @@
 
     <footer class="app-footer">
         <div>
-            <a href="https://coreui.io">Daengweb</a>
-            <span>&copy; 2018 creativeLabs.</span>
+            <a href="https://coreui.io">Kana Olshop</a>
+            <span>&copy; 2021 creativeLabs.</span>
         </div>
         <div class="ml-auto">
             <span>Powered by</span>
-            <a href="https://coreui.io">CoreUI</a>
+            <a href="">Sepongah Coffe</a>
         </div>
     </footer>
     
