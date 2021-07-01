@@ -83,7 +83,6 @@
     }
     mailChimp();
 	
-	// $('select').niceSelect();
 	
 	/*----------------------------------------------------*/
     /*  Simple LightBox js
