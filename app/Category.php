@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
@@ -20,5 +21,19 @@ class Category extends Model
     {
         //SEMUA QUERY YANG MENGGUNAKAN LOCAL SCOPE INI AKAN SECARA OTOMATIS DITAMBAHKAN KONDISI whereNul('parent_id')
         return $query->whereNull('parent_id');
+    }
+
+    protected $fillable = ['name', 'parent_id', 'slug'];
+
+    //MUTATOR
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    //ACCESSOR
+    public function getNameAttribute($value)
+    {
+        return ucfirst($value);
     }
 }
