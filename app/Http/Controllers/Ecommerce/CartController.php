@@ -129,14 +129,13 @@ class CartController extends Controller
         $customer = Customer::create([
             'name' => $request->customer_name,
             'email' => $request->email,
-            'password' => Hash::make(Str::random(40)), //TAMBAHKAN LINE INI
+            'password' => $password, //TAMBAHKAN LINE INI
             'phone_number' => $request->customer_phone,
             'address' => $request->customer_address,
             'district_id' => $request->district_id,
             'activate_token' => Str::random(30), //TAMBAKAN LINE INI
             'status' => false
         ]);
-
         //INISIASI DATABASE TRANSACTION
         //DATABASE TRANSACTION BERFUNGSI UNTUK MEMASTIKAN SEMUA PROSES SUKSES UNTUK KEMUDIAN DI COMMIT AGAR DATA BENAR BENAR DISIMPAN, JIKA TERJADI ERROR MAKA KITA ROLLBACK AGAR DATANYA SELARAS
         DB::beginTransaction();
@@ -195,7 +194,11 @@ class CartController extends Controller
             DB::commit();
 
             $carts = [];
-            $cookie = cookie('dw-carts', json_encode($carts), 2880);
+            $cookie = cookie(
+                'dw-carts',
+                json_encode($carts),
+                2880
+            );
 
             Mail::to($request->email)->send(new CustomerRegisterMail($customer, $password)); //TAMBAHKAN CODE INI SAJA 
             return redirect(route('front.finish_checkout', $order->invoice))->cookie($cookie);
