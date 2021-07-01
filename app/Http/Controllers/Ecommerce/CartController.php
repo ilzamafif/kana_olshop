@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Province;
+use App\City;
+use App\District;
 
 class CartController extends Controller
 {
@@ -96,5 +98,21 @@ class CartController extends Controller
         });
         //ME-LOAD VIEW CHECKOUT.BLADE.PHP DAN PASSING DATA PROVINCES, CARTS DAN SUBTOTAL
         return view('ecommerce.checkout', compact('provinces', 'carts', 'subtotal'));
+    }
+
+    public function getCity()
+    {
+        //QUERY UNTUK MENGAMBIL DATA KOTA / KABUPATEN BERDASARKAN PROVINCE_ID
+        $cities = City::where('province_id', request()->province_id)->get();
+        //KEMBALIKAN DATANYA DALAM BENTUK JSON
+        return response()->json(['status' => 'success', 'data' => $cities]);
+    }
+
+    public function getDistrict()
+    {
+        //QUERY UNTUK MENGAMBIL DATA KECAMATAN BERDASARKAN CITY_ID
+        $districts = District::where('city_id', request()->city_id)->get();
+        //KEMUDIAN KEMBALIKAN DATANYA DALAM BENTUK JSON
+        return response()->json(['status' => 'success', 'data' => $districts]);
     }
 }
