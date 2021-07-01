@@ -83,4 +83,22 @@ class CategoryController extends Controller
         //REDIRECT KE HALAMAN LIST KATEGORI
         return redirect(route('category.index'))->with(['success' => 'Kategori Diperbaharui!']);
     }
+
+    public function destroy($id)
+    {
+        //Buat query untuk mengambil category berdasarkan id menggunakan method find()
+        //ADAPUN withCount() SERUPA DENGAN EAGER LOADING YANG MENGGUNAKAN with()
+        //HANYA SAJA withCount() RETURNNYA ADALAH INTEGER
+        //JADI NNTI HASIL QUERYNYA AKAN MENAMBAHKAN FIELD BARU BERNAMA child_count YANG BERISI JUMLAH DATA ANAK KATEGORI
+        $category = Category::withCount(['child'])->find($id);
+        //JIKA KATEGORI INI TIDAK DIGUNAKAN SEBAGAI PARENT ATAU CHILDNYA = 0
+        if ($category->child_count == 0) {
+            //MAKA HAPUS KATEGORI INI
+            $category->delete();
+            //DAN REDIRECT KEMBALI KE HALAMAN LIST KATEGORI
+            return redirect(route('category.index'))->with(['success' => 'Kategori Dihapus!']);
+        }
+        //SELAIN ITU, MAKA REDIRECT KE LIST TAPI FLASH MESSAGENYA ERROR YANG BERARTI KATEGORI INI SEDANG DIGUNAKAN
+        return redirect(route('category.index'))->with(['error' => 'Kategori Ini Memiliki Anak Kategori!']);
+    }
 }
