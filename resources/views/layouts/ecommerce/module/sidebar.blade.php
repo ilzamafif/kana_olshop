@@ -3,7 +3,7 @@
     <h3>Main Menu</h3>
     <ul class="menu-sidebar-area">
       <li class="icon-dashboard"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
-      <li class="icon-customers"><a href="">Pesanan</a></li>
+      <li class="icon-customers"><a href="{{ route('customer.orders') }}">Pesanan</a></li>
       <li class="icon-users"><a href="">Pengaturan</a></li>
     </ul>
   </div>
