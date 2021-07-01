@@ -38,3 +38,8 @@ Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function () 
     Route::get('/product/bulk', 'ProductController@massUploadForm')->name('product.bulk'); //TAMBAHKAN ROUTE 
     Route::post('/product/bulk', 'ProductController@massUpload')->name('product.saveBulk');
 });
+
+Route::group(['prefix' => 'member', 'namespace' => 'Ecommerce'], function () {
+    Route::get('login', 'LoginController@loginForm')->name('customer.login'); //TAMBAHKAN ROUTE INI
+    Route::get('verify/{token}', 'FrontController@verifyCustomerRegistration')->name('customer.verify');
+});

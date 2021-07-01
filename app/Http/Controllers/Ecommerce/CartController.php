@@ -13,6 +13,8 @@ use App\Order;
 use App\OrderDetail;
 use Illuminate\Support\Str;
 use DB;
+use App\Mail\CustomerRegisterMail;
+use Mail;
 
 class CartController extends Controller
 {
@@ -193,9 +195,9 @@ class CartController extends Controller
             DB::commit();
 
             $carts = [];
-            //KOSONGKAN DATA KERANJANG DI COOKIE
             $cookie = cookie('dw-carts', json_encode($carts), 2880);
-            //REDIRECT KE HALAMAN FINISH TRANSAKSI
+
+            Mail::to($request->email)->send(new CustomerRegisterMail($customer, $password)); //TAMBAHKAN CODE INI SAJA 
             return redirect(route('front.finish_checkout', $order->invoice))->cookie($cookie);
         } catch (\Exception $e) {
             //JIKA TERJADI ERROR, MAKA ROLLBACK DATANYA
