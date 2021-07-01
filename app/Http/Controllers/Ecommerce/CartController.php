@@ -46,7 +46,7 @@ class CartController extends Controller
     public function listCart()
     {
         //MENGAMBIL DATA DARI COOKIE
-        $carts = json_decode(request()->cookie('dw-carts'), true);
+        $carts = $this->getCarts();
         //UBAH ARRAY MENJADI COLLECTION, KEMUDIAN GUNAKAN METHOD SUM UNTUK MENGHITUNG SUBTOTAL
         $subtotal = collect($carts)->sum(function ($q) {
             return $q['qty'] * $q['product_price']; //SUBTOTAL TERDIRI DARI QTY * PRICE
@@ -58,7 +58,7 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
         //AMBIL DATA DARI COOKIE
-        $carts = json_decode(request()->cookie('dw-carts'), true);
+        $carts = $this->getCarts();
         //KEMUDIAN LOOPING DATA PRODUCT_ID, KARENA NAMENYA ARRAY PADA VIEW SEBELUMNYA
         //MAKA DATA YANG DITERIMA ADALAH ARRAY SEHINGGA BISA DI-LOOPING
         foreach ($request->product_id as $key => $row) {
@@ -75,5 +75,12 @@ class CartController extends Controller
         $cookie = cookie('dw-carts', json_encode($carts), 2880);
         //DAN STORE KE BROWSER.
         return redirect()->back()->cookie($cookie);
+    }
+
+    private function getCarts()
+    {
+        $carts = json_decode(request()->cookie('dw-carts'), true);
+        $carts = $carts != '' ? $carts : [];
+        return $carts;
     }
 }
