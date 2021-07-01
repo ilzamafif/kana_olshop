@@ -40,6 +40,12 @@ Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function () 
 });
 
 Route::group(['prefix' => 'member', 'namespace' => 'Ecommerce'], function () {
+    Route::post('login', 'LoginController@login')->name('customer.post_login');
     Route::get('login', 'LoginController@loginForm')->name('customer.login'); //TAMBAHKAN ROUTE INI
     Route::get('verify/{token}', 'FrontController@verifyCustomerRegistration')->name('customer.verify');
+});
+
+Route::group(['middleware' => 'customer'], function () {
+    Route::get('dashboard', 'LoginController@dashboard')->name('customer.dashboard');
+    Route::get('logout', 'LoginController@logout')->name('customer.logout');
 });

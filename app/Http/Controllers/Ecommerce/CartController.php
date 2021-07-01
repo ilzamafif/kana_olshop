@@ -129,7 +129,7 @@ class CartController extends Controller
         $customer = Customer::create([
             'name' => $request->customer_name,
             'email' => $request->email,
-            'password' => $password, //TAMBAHKAN LINE INI
+            'password' => Hash::make(Str::random(40)), //TAMBAHKAN LINE INI
             'phone_number' => $request->customer_phone,
             'address' => $request->customer_address,
             'district_id' => $request->district_id,

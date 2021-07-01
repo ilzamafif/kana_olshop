@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Customer;
+use App\Customer; //USE STATEMENT MODEL CUSTOMER
 
 class CustomerRegisterMail extends Mailable
 {
@@ -17,9 +17,10 @@ class CustomerRegisterMail extends Mailable
      *
      * @return void
      */
-
     protected $customer;
     protected $randomPassword;
+
+    //MEMINTA DATA BERUPA INFORMASI CUSTOMER DAN RANDOM PASSWORD YANG BELUM DI-ENCRYPT
     public function __construct(Customer $customer, $randomPassword)
     {
         $this->customer = $customer;
