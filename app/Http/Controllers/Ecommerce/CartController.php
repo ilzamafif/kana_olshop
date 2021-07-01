@@ -125,49 +125,49 @@ class CartController extends Controller
 
     public function processCheckout(Request $request)
     {
-        $password = Str::random(8); //TAMBAHKAN LINE INI
-        $customer = Customer::create([
-            'name' => $request->customer_name,
-            'email' => $request->email,
-            'password' => $password, //TAMBAHKAN LINE INI
-            'phone_number' => $request->customer_phone,
-            'address' => $request->customer_address,
-            'district_id' => $request->district_id,
-            'activate_token' => Str::random(30), //TAMBAKAN LINE INI
-            'status' => false
+        $this->validate($request, [
+            'customer_name' => 'required|string|max:100',
+            'customer_phone' => 'required',
+            'email' => 'required|email',
+            'customer_address' => 'required|string',
+            'province_id' => 'required|exists:provinces,id',
+            'city_id' => 'required|exists:cities,id',
+            'district_id' => 'required|exists:districts,id'
         ]);
         //INISIASI DATABASE TRANSACTION
         //DATABASE TRANSACTION BERFUNGSI UNTUK MEMASTIKAN SEMUA PROSES SUKSES UNTUK KEMUDIAN DI COMMIT AGAR DATA BENAR BENAR DISIMPAN, JIKA TERJADI ERROR MAKA KITA ROLLBACK AGAR DATANYA SELARAS
         DB::beginTransaction();
         try {
-            //CHECK DATA CUSTOMER BERDASARKAN EMAIL
             $customer = Customer::where('email', $request->email)->first();
-            //JIKA DIA TIDAK LOGIN DAN DATA CUSTOMERNYA ADA
-            if (!auth()->check() && $customer) {
-                //MAKA REDIRECT DAN TAMPILKAN INSTRUKSI UNTUK LOGIN 
+
+            //LAKUKAN PERUBAHAN PADA BAGIAN INI
+            if (!auth()->guard('customer')->check() && $customer) {
                 return redirect()->back()->with(['error' => 'Silahkan Login Terlebih Dahulu']);
             }
 
-            //AMBIL DATA KERANJANG
             $carts = $this->getCarts();
-            //HITUNG SUBTOTAL BELANJAAN
             $subtotal = collect($carts)->sum(function ($q) {
                 return $q['qty'] * $q['product_price'];
             });
 
-            //SIMPAN DATA CUSTOMER BARU
-            $customer = Customer::create([
-                'name' => $request->customer_name,
-                'email' => $request->email,
-                'phone_number' => $request->customer_phone,
-                'address' => $request->customer_address,
-                'district_id' => $request->district_id,
-                'status' => false
-            ]);
+            //UNTUK MENGHINDARI DUPLICATE CUSTOMER, MASUKKAN QUERY UNTUK MENAMBAHKAN CUSTOMER BARU
+            //SEBENARNYA VALIDASINYA BISA DIMASUKKAN PADA METHOD VALIDATION DIATAS, TAPI TIDAK MENGAPA UNTUK MENCOBA CARA BERBEDA
+            if (!auth()->guard('customer')->check()) {
+                $password = Str::random(8);
+                $customer = Customer::create([
+                    'name' => $request->customer_name,
+                    'email' => $request->email,
+                    'password' => $password,
+                    'phone_number' => $request->customer_phone,
+                    'address' => $request->customer_address,
+                    'district_id' => $request->district_id,
+                    'activate_token' => Str::random(30),
+                    'status' => false
+                ]);
+            }
 
-            //SIMPAN DATA ORDER
             $order = Order::create([
-                'invoice' => Str::random(4) . '-' . time(), //INVOICENYA KITA BUAT DARI STRING RANDOM DAN WAKTU
+                'invoice' => Str::random(4) . '-' . time(),
                 'customer_id' => $customer->id,
                 'customer_name' => $customer->name,
                 'customer_phone' => $request->customer_phone,
@@ -176,11 +176,8 @@ class CartController extends Controller
                 'subtotal' => $subtotal
             ]);
 
-            //LOOPING DATA DI CARTS
             foreach ($carts as $row) {
-                //AMBIL DATA PRODUK BERDASARKAN PRODUCT_ID
                 $product = Product::find($row['product_id']);
-                //SIMPAN DETAIL ORDER
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $row['product_id'],
@@ -190,22 +187,18 @@ class CartController extends Controller
                 ]);
             }
 
-            //TIDAK TERJADI ERROR, MAKA COMMIT DATANYA UNTUK MENINFORMASIKAN BAHWA DATA SUDAH FIX UNTUK DISIMPAN
             DB::commit();
 
             $carts = [];
-            $cookie = cookie(
-                'dw-carts',
-                json_encode($carts),
-                2880
-            );
+            $cookie = cookie('dw-carts', json_encode($carts), 2880);
 
-            Mail::to($request->email)->send(new CustomerRegisterMail($customer, $password)); //TAMBAHKAN CODE INI SAJA 
+            //EMAILNYA JUGA UNTUK CUSTOMER BARU
+            if (!auth()->guard('customer')->check()) {
+                Mail::to($request->email)->send(new CustomerRegisterMail($customer, $password));
+            }
             return redirect(route('front.finish_checkout', $order->invoice))->cookie($cookie);
         } catch (\Exception $e) {
-            //JIKA TERJADI ERROR, MAKA ROLLBACK DATANYA
             DB::rollback();
-            //DAN KEMBALI KE FORM TRANSAKSI SERTA MENAMPILKAN ERROR
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
