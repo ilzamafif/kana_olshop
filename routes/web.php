@@ -19,6 +19,7 @@ Route::get('/category/{slug}', 'Ecommerce\FrontController@categoryProduct')->nam
 Route::get('/product/{slug}', 'Ecommerce\FrontController@show')->name('front.show_product');
 Route::post('cart', 'Ecommerce\CartController@addToCart')->name('front.cart');
 Route::get('/cart', 'Ecommerce\CartController@listCart')->name('front.list_cart');
+Route::post('/cart/update', 'Ecommerce\CartController@updateCart')->name('front.update_cart');
 
 Auth::routes();
 
