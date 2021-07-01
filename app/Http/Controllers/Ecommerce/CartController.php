@@ -123,15 +123,16 @@ class CartController extends Controller
 
     public function processCheckout(Request $request)
     {
-        //VALIDASI DATANYA
-        $this->validate($request, [
-            'customer_name' => 'required|string|max:100',
-            'customer_phone' => 'required',
-            'email' => 'required|email',
-            'customer_address' => 'required|string',
-            'province_id' => 'required|exists:provinces,id',
-            'city_id' => 'required|exists:cities,id',
-            'district_id' => 'required|exists:districts,id'
+        $password = Str::random(8); //TAMBAHKAN LINE INI
+        $customer = Customer::create([
+            'name' => $request->customer_name,
+            'email' => $request->email,
+            'password' => $password, //TAMBAHKAN LINE INI
+            'phone_number' => $request->customer_phone,
+            'address' => $request->customer_address,
+            'district_id' => $request->district_id,
+            'activate_token' => Str::random(30), //TAMBAKAN LINE INI
+            'status' => false
         ]);
 
         //INISIASI DATABASE TRANSACTION
