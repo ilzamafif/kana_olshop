@@ -32,4 +32,12 @@ class FrontController extends Controller
         //LOAD VIEW YANG SAMA YAKNI PRODUCT.BLADE.PHP KARENA TAMPILANNYA AKAN KITA BUAT SAMA JUGA
         return view('ecommerce.product', compact('products'));
     }
+
+    public function show($slug)
+    {
+        //QUERY UNTUK MENGAMBIL SINGLE DATA BERDASARKAN SLUG-NYA
+        $product = Product::with(['category'])->where('slug', $slug)->first();
+        //LOAD VIEW SHOW.BLADE.PHP DAN PASSING DATA PRODUCT
+        return view('ecommerce.show', compact('product'));
+    }
 }
