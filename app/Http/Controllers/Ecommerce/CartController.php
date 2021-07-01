@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ecommerce;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\Province;
 
 class CartController extends Controller
 {
@@ -82,5 +83,18 @@ class CartController extends Controller
         $carts = json_decode(request()->cookie('dw-carts'), true);
         $carts = $carts != '' ? $carts : [];
         return $carts;
+    }
+
+    public function checkout()
+    {
+        //QUERY UNTUK MENGAMBIL SEMUA DATA PROPINSI
+        $provinces = Province::orderBy('created_at', 'DESC')->get();
+        $carts = $this->getCarts(); //MENGAMBIL DATA CART
+        //MENGHITUNG SUBTOTAL DARI KERANJANG BELANJA (CART)
+        $subtotal = collect($carts)->sum(function ($q) {
+            return $q['qty'] * $q['product_price'];
+        });
+        //ME-LOAD VIEW CHECKOUT.BLADE.PHP DAN PASSING DATA PROVINCES, CARTS DAN SUBTOTAL
+        return view('ecommerce.checkout', compact('provinces', 'carts', 'subtotal'));
     }
 }
