@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Order;
+use App\Mail\OrderMail;
+use Mail;
 
 class OrderController extends Controller
 {
@@ -58,5 +60,17 @@ class OrderController extends Controller
         $order->update(['status' => 2]);
         //REDIRECT KE HALAMAN YANG SAMA.
         return redirect(route('orders.view', $order->invoice));
+    }
+
+    public function shippingOrder(Request $request)
+    {
+        //MENGAMBIL DATA ORDER BERDASARKAN ID
+        $order = Order::with(['customer'])->find($request->order_id);
+        //UPDATE DATA ORDER DENGAN MEMASUKKAN NOMOR RESI DAN MENGUBAH STATUS MENJADI DIKIRIM
+        $order->update(['tracking_number' => $request->tracking_number, 'status' => 3]);
+        //KIRIM EMAIL KE PELANGGAN TERKAIT
+        Mail::to($order->customer->email)->send(new OrderMail($order));
+        //REDIRECT KEMBALI
+        return redirect()->back();
     }
 }
