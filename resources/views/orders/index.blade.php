@@ -29,36 +29,7 @@
               <div class="alert alert-danger">{{ session('error') }}</div>
               @endif
 
-              <!-- FORM UNTUK FILTER DAN PENCARIAN -->
-              <form action="{{ route('orders.index') }}" method="get">
-                <div class="input-group mb-3 col-md-6 float-right">
-                  <select name="status" class="form-control mr-3">
-                    <option value="">Pilih Status</option>
-                    <option value="0">Baru</option>
-                    <option value="1">Confirm</option>
-                    <option value="2">Proses</option>
-                    <option value="3">Dikirim</option>
-                    <option value="4">Selesai</option>
-                  </select>
-                  <input type="text" name="q" class="form-control" placeholder="Cari..." value="{{ request()->q }}">
-                  <div class="input-group-append">
-                    <button class="btn btn-secondary" type="submit">Cari</button>
-                  </div>
-                </div>
-              </form>
-              <form action="{{ route('customer.order_accept') }}" class="form-inline" onsubmit="return confirm('Kamu Yakin?');" method="post">
-                @csrf
 
-                <!-- TOMBOL VIEW ORDER KITA BUNGKUS JG DENGAN FORM AGAR RAPI -->
-                <a href="{{ route('customer.view_order', $row->invoice) }}" class="btn btn-primary btn-sm mr-1">Detail</a>
-
-                <input type="hidden" name="order_id" value="{{ $row->id }}">
-                @if ($row->status == 3)
-                <button class="btn btn-success btn-sm">Terima</button>
-                <!-- TOMBOL RETURN AKAN DITEMPATKAN DISINI PADA SUB-BAB SELANJUTNYA -->
-                @endif
-              </form>
-              <!-- FORM UNTUK FILTER DAN PENCARIAN -->
 
               <!-- TABLE UNTUK MENAMPILKAN DATA ORDER -->
               <div class="table-responsive">
@@ -80,7 +51,7 @@
                       <td>
                         <strong>{{ $row->customer_name }}</strong><br>
                         <label><strong>Telp:</strong> {{ $row->customer_phone }}</label><br>
-                        <label><strong>Alamat:</strong> {{ $row->customer_address }} {{ $row->customer->district->name }} - {{ $row->customer->district->city->name}}, {{ $row->customer->district->city->province->name }}</label>
+                        <label><strong>Alamat:</strong> {{ $row->customer_address }} </label>
                       </td>
                       <td>Rp {{ number_format($row->subtotal) }}</td>
                       <td>{{ $row->created_at->format('d-m-Y') }}</td>

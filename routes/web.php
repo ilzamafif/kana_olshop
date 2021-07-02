@@ -25,6 +25,7 @@ Route::get('/checkout', 'Ecommerce\CartController@checkout')->name('front.checko
 Route::post('/checkout', 'Ecommerce\CartController@processCheckout')->name('front.store_checkout');
 Route::get('/checkout/{invoice}', 'Ecommerce\CartController@checkoutFinish')->name('front.finish_checkout');
 
+
 Auth::routes();
 
 //JADI INI GROUPING ROUTE, SEHINGGA SEMUA ROUTE YANG ADA DIDALAMNYA
@@ -63,5 +64,7 @@ Route::group(['prefix' => 'member', 'namespace' => 'Ecommerce'], function () {
         Route::get('setting', 'FrontController@customerSettingForm')->name('customer.settingForm');
         Route::post('setting', 'FrontController@customerUpdateProfile')->name('customer.setting');
         Route::post('orders/accept', 'OrderController@acceptOrder')->name('customer.order_accept');
+        Route::get('orders/return/{invoice}', 'OrderController@returnForm')->name('customer.order_return');
+        Route::put('orders/return/{invoice}', 'OrderController@processReturn')->name('customer.return');
     });
 });
