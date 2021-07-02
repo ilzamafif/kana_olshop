@@ -41,6 +41,8 @@ Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function () 
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/', 'OrderController@index')->name('orders.index');
         Route::delete('/{id}', 'OrderController@destroy')->name('orders.destroy');
+        Route::get('/{invoice}', 'OrderController@view')->name('orders.view');
+        Route::get('/payment/{invoice}', 'OrderController@acceptPayment')->name('orders.approve_payment');
         //SEMUA ROUTE BARU SEPANJANG ARTIKEL INI AKAN DISIMPAN DI DALAM BLOCK CODE INI
     });
 });
