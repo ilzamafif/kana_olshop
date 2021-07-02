@@ -129,6 +129,19 @@
                         <td>{{ $row->qty }} Item</td>
                         <td>{{ $row->weight }} gr</td>
                       </tr>
+                      <!-- TAMBAHKAN CODE INI -->
+                      <tr>
+                        <td width="30%">InvoiceID</td>
+                        <td width="5%">:</td>
+                        <th><a href="{{ route('customer.order_pdf', $order->invoice) }}" target="_blank"><strong>{{ $order->invoice }}</strong></a></th>
+                      </tr>
+                      <!-- TAMBAHKAN CODE INI -->
+
+                      <tr>
+                        <td>Nama Lengkap</td>
+                        <td width="5%">:</td>
+                        <th>{{ $order->customer_name }}</th>
+                      </tr>
                       @empty
                       <tr>
                         <td colspan="4" class="text-center">Tidak ada data</td>
