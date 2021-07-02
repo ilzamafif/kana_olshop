@@ -73,4 +73,19 @@ class OrderController extends Controller
         //REDIRECT KEMBALI
         return redirect()->back();
     }
+
+    public function acceptOrder(Request $request)
+    {
+        //CARI DATA ORDER BERDASARKAN ID
+        $order = Order::find($request->order_id);
+        //VALIDASI KEPEMILIKAN
+        if (!\Gate::forUser(auth()->guard('customer')->user())->allows('order-view', $order)) {
+            return redirect()->back()->with(['error' => 'Bukan Pesanan Kamu']);
+        }
+
+        //UBAH STATUSNYA MENJADI 4
+        $order->update(['status' => 4]);
+        //REDIRECT KEMBALI DENGAN MENAMPILKAN ALERT SUCCESS
+        return redirect()->back()->with(['success' => 'Pesanan Dikonfirmasi']);
+    }
 }
