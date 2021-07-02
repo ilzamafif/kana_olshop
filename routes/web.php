@@ -40,7 +40,7 @@ Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function () 
 
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/', 'OrderController@index')->name('orders.index');
-
+        Route::delete('/{id}', 'OrderController@destroy')->name('orders.destroy');
         //SEMUA ROUTE BARU SEPANJANG ARTIKEL INI AKAN DISIMPAN DI DALAM BLOCK CODE INI
     });
 });

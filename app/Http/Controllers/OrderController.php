@@ -32,4 +32,13 @@ class OrderController extends Controller
         $orders = $orders->paginate(10); //LOAD DATA PER 10 DATA
         return view('orders.index', compact('orders')); //LOAD VIEW INDEX DAN PASSING DATA TERSEBUT
     }
+
+    public function destroy($id)
+    {
+        $order = Order::find($id);
+        $order->details()->delete();
+        $order->payment()->delete();
+        $order->delete();
+        return redirect(route('orders.index'));
+    }
 }
