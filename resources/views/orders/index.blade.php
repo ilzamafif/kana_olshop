@@ -29,7 +29,24 @@
               <div class="alert alert-danger">{{ session('error') }}</div>
               @endif
 
-
+              <!-- FORM UNTUK FILTER DAN PENCARIAN -->
+              <form action="{{ route('orders.index') }}" method="get">
+                <div class="input-group mb-3 col-md-6 float-right">
+                  <select name="status" class="form-control mr-3">
+                    <option value="">Pilih Status</option>
+                    <option value="0">Baru</option>
+                    <option value="1">Confirm</option>
+                    <option value="2">Proses</option>
+                    <option value="3">Dikirim</option>
+                    <option value="4">Selesai</option>
+                  </select>
+                  <input type="text" name="q" class="form-control" placeholder="Cari..." value="{{ request()->q }}">
+                  <div class="input-group-append">
+                    <button class="btn btn-secondary" type="submit">Cari</button>
+                  </div>
+                </div>
+              </form>
+              <!-- FORM UNTUK FILTER DAN PENCARIAN -->
 
               <!-- TABLE UNTUK MENAMPILKAN DATA ORDER -->
               <div class="table-responsive">
@@ -51,7 +68,7 @@
                       <td>
                         <strong>{{ $row->customer_name }}</strong><br>
                         <label><strong>Telp:</strong> {{ $row->customer_phone }}</label><br>
-                        <label><strong>Alamat:</strong> {{ $row->customer_address }} </label>
+                        <label><strong>Alamat:</strong> {{ $row->customer_address }} {{ $row->customer->district->name }} - {{ $row->customer->district->city->name}}, {{ $row->customer->district->city->province->name }}</label>
                       </td>
                       <td>Rp {{ number_format($row->subtotal) }}</td>
                       <td>{{ $row->created_at->format('d-m-Y') }}</td>
